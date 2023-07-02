@@ -6,7 +6,7 @@ using LazyVikings;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle(Plugin.modName)]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription(Plugin.modLink)]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(Plugin.modAuthor)]
 [assembly: AssemblyProduct(Plugin.modName)]

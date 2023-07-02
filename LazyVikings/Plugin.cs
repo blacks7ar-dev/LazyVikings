@@ -18,7 +18,8 @@ namespace LazyVikings
         private const string modGUID = "blacks7ar.LazyVikings";
         public const string modName = "LazyVikings";
         public const string modAuthor = "blacks7ar";
-        public const string modVersion = "1.0.0";
+        public const string modVersion = "1.0.1";
+        public const string modLink = "https://valheim.thunderstore.io/package/blacks7ar/LazyVikings/";
         private static string configFileName = modGUID + ".cfg";
         private static string configFileFullPath = Paths.ConfigPath + Path.DirectorySeparatorChar + configFileName;
         public static readonly ManualLogSource LVLogger = BepInEx.Logging.Logger.CreateLogSource(modName);
@@ -61,6 +62,8 @@ namespace LazyVikings
         public static ConfigEntry<float> _windmillRadius;
         public static ConfigEntry<Automation> _windmillAutomation;
         public static ConfigEntry<Toggle> _windmillIgnorePrivateAreaCheck;
+        public static ConfigEntry<Toggle> _enableSapCollector;
+        public static ConfigEntry<float> _sapcollectorRadius;
         public static string connectionError = "";
 
         private ConfigEntry<T> config<T>(string group, string name, T value, ConfigDescription description,
@@ -145,30 +148,35 @@ namespace LazyVikings
             _kilnProductThreshold = config("5- Kiln", "Product Threshold", 0,
                 new ConfigDescription("Kiln's product threshold before it stops auto fueling.\nNOTE: Set to 0 to disable.",
                     new AcceptableValueRange<int>(0, 500)));
-            _enableSmelter = config("6- Smelter", "Enable", Toggle.On,
+            _enableSapCollector = config("6- SapCollector", "Enable", Toggle.On,
+                new ConfigDescription("Enable/Disables sap collector automation."));
+            _sapcollectorRadius = config("6- SapCollector", "Radius", 5f,
+                new ConfigDescription("SapCollector container detection range.",
+                    new AcceptableValueRange<float>(1f, 50f)));
+            _enableSmelter = config("7- Smelter", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables smelter automation."));
-            _smelterAutomation = config("6- Smelter", "Automation", Automation.Both,
+            _smelterAutomation = config("7- Smelter", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _smelterRadius = config("6- Smelter", "Radius", 5f,
+            _smelterRadius = config("7- Smelter", "Radius", 5f,
                 new ConfigDescription("Smelter container detection range.", new AcceptableValueRange<float>(1f, 50f)));
-            _smelterIgnorePrivateAreaCheck = config("6- Smelter", "Ignore Private Area Check", Toggle.On,
+            _smelterIgnorePrivateAreaCheck = config("7- Smelter", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for smelters."));
-            _enableSpinningWheel = config("7- Spinning Wheel", "Enable", Toggle.On,
+            _enableSpinningWheel = config("8- Spinning Wheel", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables spinning wheel automation."));
-            _spinningwheelAutomation = config("7- Spinning Wheel", "Automation", Automation.Both,
+            _spinningwheelAutomation = config("8- Spinning Wheel", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _spinningwheelRadius = config("7- Spinning Wheel", "Radius", 5f,
+            _spinningwheelRadius = config("8- Spinning Wheel", "Radius", 5f,
                 new ConfigDescription("Spinning wheel container detection range.",
                     new AcceptableValueRange<float>(1f, 50f)));
-            _spinningwheelIgnorePrivateAreaCheck = config("7- Spinning Wheel", "Ignore Private Area Check", Toggle.On,
+            _spinningwheelIgnorePrivateAreaCheck = config("8- Spinning Wheel", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for spinning wheels."));
-            _enableWindmill = config("8- Windmill", "Enable", Toggle.On,
+            _enableWindmill = config("9- Windmill", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables windmill automation."));
-            _windmillAutomation = config("8- Windmill", "Automation", Automation.Both,
+            _windmillAutomation = config("9- Windmill", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _windmillRadius = config("8- Windmill", "Radius", 5f,
+            _windmillRadius = config("9- Windmill", "Radius", 5f,
                 new ConfigDescription("Windmill container detection range.", new AcceptableValueRange<float>(1f, 50f)));
-            _windmillIgnorePrivateAreaCheck = config("8- Windmill", "Ignore Private Area Check", Toggle.On,
+            _windmillIgnorePrivateAreaCheck = config("9- Windmill", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for windmills."));
             var assembly = Assembly.GetExecutingAssembly();
             _harmony.PatchAll(assembly);

@@ -74,6 +74,7 @@
         <Compile Include="Patches\BeehiveRpcExtractPatch.cs" />
         <Compile Include="Patches\BeehiveUpdateBeesPatch.cs" />
         <Compile Include="Patches\SapCollectorRpcExtractPatch.cs" />
+        <Compile Include="Patches\SapCollectorUpdateTickPatch.cs" />
         <Compile Include="Patches\SmelterAwakePatch.cs" />
         <Compile Include="Patches\SmelterFindCookableItemPatch.cs" />
         <Compile Include="Patches\SmelterSpawnPatch.cs" />
