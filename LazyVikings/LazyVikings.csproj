@@ -38,13 +38,13 @@
           <HintPath>..\..\..\..\Games\Valheim\BepInEx\core\0Harmony.dll</HintPath>
         </Reference>
         <Reference Include="assembly_guiutils">
-          <HintPath>..\..\..\publicized_assemblies 216.9\assembly_guiutils_publicized.dll</HintPath>
+          <HintPath>..\..\..\..\Games\ValheimPTB-217.12\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
         </Reference>
         <Reference Include="assembly_utils">
-          <HintPath>..\..\..\publicized_assemblies 216.9\assembly_utils_publicized.dll</HintPath>
+          <HintPath>..\..\..\..\Games\ValheimPTB-217.12\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
         </Reference>
         <Reference Include="assembly_valheim">
-          <HintPath>..\..\..\publicized_assemblies 216.9\assembly_valheim_publicized.dll</HintPath>
+          <HintPath>..\..\..\..\Games\ValheimPTB-217.12\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
         </Reference>
         <Reference Include="BepInEx">
           <HintPath>..\..\..\..\Games\Valheim\BepInEx\core\BepInEx.dll</HintPath>
