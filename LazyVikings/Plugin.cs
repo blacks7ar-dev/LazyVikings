@@ -17,7 +17,7 @@ namespace LazyVikings
         private const string modGUID = "blacks7ar.LazyVikings";
         public const string modName = "LazyVikings";
         public const string modAuthor = "blacks7ar";
-        public const string modVersion = "1.0.2";
+        public const string modVersion = "1.0.4";
         public const string modLink = "https://valheim.thunderstore.io/package/blacks7ar/LazyVikings/";
         private static string configFileName = modGUID + ".cfg";
         private static string configFileFullPath = Paths.ConfigPath + Path.DirectorySeparatorChar + configFileName;
@@ -28,7 +28,8 @@ namespace LazyVikings
         {
             DisplayName = modName,
             CurrentVersion = modVersion,
-            MinimumRequiredVersion = modVersion
+            MinimumRequiredVersion = modVersion,
+            ModRequired = true
         };
 
         private static ConfigEntry<Toggle> _serverConfigLocked;
@@ -63,7 +64,6 @@ namespace LazyVikings
         public static ConfigEntry<Toggle> _windmillIgnorePrivateAreaCheck;
         public static ConfigEntry<Toggle> _enableSapCollector;
         public static ConfigEntry<float> _sapcollectorRadius;
-        public static string connectionError = "";
 
         private ConfigEntry<T> config<T>(string group, string name, T value, ConfigDescription description,
             bool synchronizedConfig = true)

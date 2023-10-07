@@ -38,13 +38,13 @@
           <HintPath>..\..\..\..\Games\Valheim\BepInEx\core\0Harmony.dll</HintPath>
         </Reference>
         <Reference Include="assembly_guiutils">
-          <HintPath>..\..\..\..\Games\ValheimPTB-217.12\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
+          <HintPath>..\..\..\..\Games\Valheim\valheim_Data\Managed\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
         </Reference>
         <Reference Include="assembly_utils">
-          <HintPath>..\..\..\..\Games\ValheimPTB-217.12\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
+          <HintPath>..\..\..\..\Games\Valheim\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
         </Reference>
         <Reference Include="assembly_valheim">
-          <HintPath>..\..\..\..\Games\ValheimPTB-217.12\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
+          <HintPath>..\..\..\..\Games\Valheim\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
         </Reference>
         <Reference Include="BepInEx">
           <HintPath>..\..\..\..\Games\Valheim\BepInEx\core\BepInEx.dll</HintPath>
@@ -56,6 +56,9 @@
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
+        <Reference Include="Unity.TextMeshPro">
+          <HintPath>..\..\..\..\Games\Valheim\unstripped_corlib\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine">
           <HintPath>..\..\..\..\Games\Valheim\unstripped_corlib\UnityEngine.dll</HintPath>
         </Reference>
@@ -64,9 +67,6 @@
         </Reference>
         <Reference Include="UnityEngine.PhysicsModule">
           <HintPath>..\..\..\..\Games\Valheim\unstripped_corlib\UnityEngine.PhysicsModule.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.UI">
-          <HintPath>..\..\..\..\Games\Valheim\unstripped_corlib\UnityEngine.UI.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>
@@ -84,7 +84,6 @@
         <Compile Include="Utils\Helper.cs" />
         <Compile Include="Utils\Logging.cs" />
         <Compile Include="Utils\Toggle.cs" />
-        <Compile Include="Utils\VersionCheck.cs" />
     </ItemGroup>
     <ItemGroup>
       <Content Include="ILRepack.targets" />
