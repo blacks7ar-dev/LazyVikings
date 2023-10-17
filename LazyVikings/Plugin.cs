@@ -17,7 +17,7 @@ namespace LazyVikings
         private const string modGUID = "blacks7ar.LazyVikings";
         public const string modName = "LazyVikings";
         public const string modAuthor = "blacks7ar";
-        public const string modVersion = "1.0.4";
+        public const string modVersion = "1.0.5";
         public const string modLink = "https://valheim.thunderstore.io/package/blacks7ar/LazyVikings/";
         private static string configFileName = modGUID + ".cfg";
         private static string configFileFullPath = Paths.ConfigPath + Path.DirectorySeparatorChar + configFileName;
@@ -28,8 +28,7 @@ namespace LazyVikings
         {
             DisplayName = modName,
             CurrentVersion = modVersion,
-            MinimumRequiredVersion = modVersion,
-            ModRequired = true
+            MinimumRequiredVersion = modVersion
         };
 
         private static ConfigEntry<Toggle> _serverConfigLocked;
