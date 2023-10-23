@@ -11,13 +11,14 @@ using ServerSync;
 namespace LazyVikings
 {
     [BepInPlugin(modGUID, modName, modVersion)]
+    [BepInDependency("org.bepinex.plugins.odinssteelworks", BepInDependency.DependencyFlags.SoftDependency)]
 
     public class Plugin : BaseUnityPlugin
     {
         private const string modGUID = "blacks7ar.LazyVikings";
         public const string modName = "LazyVikings";
         public const string modAuthor = "blacks7ar";
-        public const string modVersion = "1.0.5";
+        public const string modVersion = "1.0.6";
         public const string modLink = "https://valheim.thunderstore.io/package/blacks7ar/LazyVikings/";
         private static string configFileName = modGUID + ".cfg";
         private static string configFileFullPath = Paths.ConfigPath + Path.DirectorySeparatorChar + configFileName;
@@ -63,6 +64,19 @@ namespace LazyVikings
         public static ConfigEntry<Toggle> _windmillIgnorePrivateAreaCheck;
         public static ConfigEntry<Toggle> _enableSapCollector;
         public static ConfigEntry<float> _sapcollectorRadius;
+        public static ConfigEntry<Toggle> _enableFermenter;
+        public static ConfigEntry<float> _fermenterRadius;
+        public static ConfigEntry<Automation> _fermenterAutomation;
+        public static ConfigEntry<Toggle> _fermenterIgnorePrivateAreaCheck;
+        public static ConfigEntry<Toggle> _enableSteelKiln;
+        public static ConfigEntry<float> _steelKilnRadius;
+        public static ConfigEntry<Automation> _steelKilnAutomation;
+        public static ConfigEntry<Toggle> _steelKilnIgnorePrivateAreaCheck;
+        public static ConfigEntry<Toggle> _enableSteelSlackTub;
+        public static ConfigEntry<float> _steelSlackTubRadius;
+        public static ConfigEntry<Automation> _steelSlackTubAutomation;
+        public static ConfigEntry<Toggle> _steelSlackTubIgnorePrivateAreaCheck;
+        public static bool _hasOdinSteelWorks;
 
         private ConfigEntry<T> config<T>(string group, string name, T value, ConfigDescription description,
             bool synchronizedConfig = true)
@@ -106,76 +120,107 @@ namespace LazyVikings
 
         public void Awake()
         {
-            _serverConfigLocked = config("1- ServerSync", "Lock Configuration", Toggle.On,
+            _serverConfigLocked = config("01- ServerSync", "Lock Configuration", Toggle.On,
                 new ConfigDescription("If On, the configuration is locked and can be changed by server admins only."));
             _configSync.AddLockingConfigEntry(_serverConfigLocked);
-            _enableBeehive = config("2- Beehive", "Enable", Toggle.On,
+            _enableBeehive = config("02- Beehive", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables beehive automation."));
-            _beehiveRadius = config("2- Beehive", "Radius", 5f,
+            _beehiveRadius = config("02- Beehive", "Radius", 5f,
                 new ConfigDescription("Beehives container detection range.", new AcceptableValueRange<float>(1f, 50f)));
-            _enableBlastFurnace = config("3- Blast Furnace", "Enable", Toggle.On,
+            _enableBlastFurnace = config("03- Blast Furnace", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables blast furnace automation."));
-            _blastfurnaceAutomation = config("3- Blast Furnace", "Automation", Automation.Both,
+            _blastfurnaceAutomation = config("03- Blast Furnace", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _blastfurnaceRadius = config("3- Blast Furnace", "Radius", 5f,
+            _blastfurnaceRadius = config("03- Blast Furnace", "Radius", 5f,
                 new ConfigDescription("Blast furnace container detection range.",
                     new AcceptableValueRange<float>(1f, 50f)));
-            _blastfurnaceIgnorePrivateAreaCheck = config("3- Blast Furnace", "Ignore Private Area Check", Toggle.On,
+            _blastfurnaceIgnorePrivateAreaCheck = config("03- Blast Furnace", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for blast furnaces."));
-            _blastfurnaceAllowAllOres = config("3- Blast Furnace", "Allow All Ores", Toggle.Off,
+            _blastfurnaceAllowAllOres = config("03- Blast Furnace", "Allow All Ores", Toggle.Off,
                 new ConfigDescription("If On, all ores will be process by the blast furnace."));
-            _enableEitrRefinery = config("4- Eitr Refinery", "Enable", Toggle.On,
+            _enableEitrRefinery = config("04- Eitr Refinery", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables eitr refinery automation."));
-            _eitrrefineryAutomation = config("4- Eitr Refinery", "Automation", Automation.Both,
+            _eitrrefineryAutomation = config("04- Eitr Refinery", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _eitrrefineryRadius = config("4- Eitr Refinery", "Radius", 5f,
+            _eitrrefineryRadius = config("04- Eitr Refinery", "Radius", 5f,
                 new ConfigDescription("Eitr refinery container detection range.",
                     new AcceptableValueRange<float>(1f, 50f)));
-            _eitrrefineryIgnorePrivateAreaCheck = config("4- Eitr Refinery", "Ignore Private Area Check", Toggle.On,
+            _eitrrefineryIgnorePrivateAreaCheck = config("04- Eitr Refinery", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for eitr refinerys."));
-            _enableKiln = config("5- Kiln", "Enable", Toggle.On,
+            _enableKiln = config("05- Kiln", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables kiln automation."));
-            _kilnAutomation = config("5- Kiln", "Automation", Automation.Both,
+            _kilnAutomation = config("05- Kiln", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _kilnRadius = config("5- Kiln", "Radius", 5f,
+            _kilnRadius = config("05- Kiln", "Radius", 5f,
                 new ConfigDescription("Kiln container detection range.", new AcceptableValueRange<float>(1f, 50f)));
-            _kilnIgnorePrivateAreaCheck = config("5- Kiln", "Ignore Private Area Check", Toggle.On,
+            _kilnIgnorePrivateAreaCheck = config("05- Kiln", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for kilns."));
-            _kilnProcessAllWoods = config("5- Kiln", "Process All Woods", Toggle.Off,
+            _kilnProcessAllWoods = config("05- Kiln", "Process All Woods", Toggle.Off,
                 new ConfigDescription("If On, finewood and corewood will also be process into coal."));
-            _kilnProductThreshold = config("5- Kiln", "Product Threshold", 0,
+            _kilnProductThreshold = config("05- Kiln", "Product Threshold", 0,
                 new ConfigDescription("Kiln's product threshold before it stops auto fueling.\nNOTE: Set to 0 to disable.",
                     new AcceptableValueRange<int>(0, 500)));
-            _enableSapCollector = config("6- SapCollector", "Enable", Toggle.On,
+            _enableSapCollector = config("06- SapCollector", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables sap collector automation."));
-            _sapcollectorRadius = config("6- SapCollector", "Radius", 5f,
+            _sapcollectorRadius = config("06- SapCollector", "Radius", 5f,
                 new ConfigDescription("SapCollector container detection range.",
                     new AcceptableValueRange<float>(1f, 50f)));
-            _enableSmelter = config("7- Smelter", "Enable", Toggle.On,
+            _enableSmelter = config("07- Smelter", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables smelter automation."));
-            _smelterAutomation = config("7- Smelter", "Automation", Automation.Both,
+            _smelterAutomation = config("07- Smelter", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _smelterRadius = config("7- Smelter", "Radius", 5f,
+            _smelterRadius = config("07- Smelter", "Radius", 5f,
                 new ConfigDescription("Smelter container detection range.", new AcceptableValueRange<float>(1f, 50f)));
-            _smelterIgnorePrivateAreaCheck = config("7- Smelter", "Ignore Private Area Check", Toggle.On,
+            _smelterIgnorePrivateAreaCheck = config("07- Smelter", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for smelters."));
-            _enableSpinningWheel = config("8- Spinning Wheel", "Enable", Toggle.On,
+            _enableSpinningWheel = config("08- Spinning Wheel", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables spinning wheel automation."));
-            _spinningwheelAutomation = config("8- Spinning Wheel", "Automation", Automation.Both,
+            _spinningwheelAutomation = config("08- Spinning Wheel", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _spinningwheelRadius = config("8- Spinning Wheel", "Radius", 5f,
+            _spinningwheelRadius = config("08- Spinning Wheel", "Radius", 5f,
                 new ConfigDescription("Spinning wheel container detection range.",
                     new AcceptableValueRange<float>(1f, 50f)));
-            _spinningwheelIgnorePrivateAreaCheck = config("8- Spinning Wheel", "Ignore Private Area Check", Toggle.On,
+            _spinningwheelIgnorePrivateAreaCheck = config("08- Spinning Wheel", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for spinning wheels."));
-            _enableWindmill = config("9- Windmill", "Enable", Toggle.On,
+            _enableWindmill = config("09- Windmill", "Enable", Toggle.On,
                 new ConfigDescription("Enable/Disables windmill automation."));
-            _windmillAutomation = config("9- Windmill", "Automation", Automation.Both,
+            _windmillAutomation = config("09- Windmill", "Automation", Automation.Both,
                 new ConfigDescription("Choose what to automate."));
-            _windmillRadius = config("9- Windmill", "Radius", 5f,
+            _windmillRadius = config("09- Windmill", "Radius", 5f,
                 new ConfigDescription("Windmill container detection range.", new AcceptableValueRange<float>(1f, 50f)));
-            _windmillIgnorePrivateAreaCheck = config("9- Windmill", "Ignore Private Area Check", Toggle.On,
+            _windmillIgnorePrivateAreaCheck = config("09- Windmill", "Ignore Private Area Check", Toggle.On,
                 new ConfigDescription("If On, ignores private area check for windmills."));
+            _enableFermenter = config("10- Fermenter", "Enable", Toggle.On,
+                new ConfigDescription("Enable/Disables fermenter automation."));
+            _fermenterAutomation = config("10- Fermenter", "Automation", Automation.Both,
+                new ConfigDescription("Choose what to automate."));
+            _fermenterRadius = config("10- Fermenter", "Radius", 5f,
+                new ConfigDescription("Fermenter container detection range.",
+                    new AcceptableValueRange<float>(1f, 50f)));
+            _fermenterIgnorePrivateAreaCheck = config("10- Fermenter", "Ignore Private Area Check", Toggle.On,
+                new ConfigDescription("If On, ignores private area check for fermenters."));
+            _hasOdinSteelWorks = Helper.CheckOdinSteelWorksMod();
+            if (_hasOdinSteelWorks)
+            {
+                _enableSteelKiln = config("11- Steel Kiln", "Enable", Toggle.On,
+                    new ConfigDescription("Enable/Disables steel kiln automation."));
+                _steelKilnAutomation = config("11- Steel Kiln", "Automation", Automation.Both,
+                    new ConfigDescription("Choose what to automate."));
+                _steelKilnRadius = config("11- Steel Kiln", "Radius", 5f,
+                    new ConfigDescription("Steel Kiln container detection range.",
+                        new AcceptableValueRange<float>(1f, 50f)));
+                _steelKilnIgnorePrivateAreaCheck = config("11- Steel Kiln", "Ignore Private Area Check", Toggle.On,
+                    new ConfigDescription("If On, ignores private area check for steel kiln."));
+                _enableSteelSlackTub = config("12- Steel Slack Tub", "Enable", Toggle.On,
+                    new ConfigDescription("Enable/Disables steel slack tub automation."));
+                _steelSlackTubAutomation = config("12- Steel Slack Tub", "Automation", Automation.Both,
+                    new ConfigDescription("Choose what to automate."));
+                _steelSlackTubRadius = config("12- Steel Slack Tub", "Radius", 5f,
+                    new ConfigDescription("Steel slack tub container detection range.",
+                        new AcceptableValueRange<float>(1f, 50f)));
+                _steelSlackTubIgnorePrivateAreaCheck = config("12- Steel Slack Tub", "Ignore Private Area Check",
+                    Toggle.On, new ConfigDescription("If On, ignores private area check for steel slack tub."));
+            }
             var assembly = Assembly.GetExecutingAssembly();
             _harmony.PatchAll(assembly);
             ConfigWatcher();

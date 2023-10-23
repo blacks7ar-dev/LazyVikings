@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using BepInEx.Bootstrap;
 using UnityEngine;
 
 namespace LazyVikings.Utils;
@@ -9,6 +10,13 @@ namespace LazyVikings.Utils;
 public static class Helper
 {
     private static readonly ConcurrentDictionary<float, Stopwatch> _stopwatches = new();
+
+    public static bool CheckOdinSteelWorksMod()
+    {
+        if (!Chainloader.PluginInfos.ContainsKey("org.bepinex.plugins.odinssteelworks")) return false;
+        Logging.LogInfo("OdinSteelWorks detected.. applying patch!");
+        return true;
+    }
     public static List<Container> GetNearbyContainers(GameObject gameObject, float radius, bool checkWard = true)
     {
         var layerNames = new[] { "piece", "item", "vehicle" };
