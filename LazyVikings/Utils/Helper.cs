@@ -89,9 +89,9 @@ public static class Helper
         if (!ContainerContainsItem(container, itemData)) return 0;
         var num = 0;
         var allItems = container.GetInventory().GetAllItems();
-        foreach (var item in allItems)
+        foreach (var item in allItems.Where(item => item.m_shared.m_name == itemData.m_shared.m_name))
         {
-            if (item.m_shared.m_name != itemData.m_shared.m_name) continue;
+            if (Plugin._leaveOne.Value == Toggle.On && item.m_stack == 1) return 0;
             var num2 = Mathf.Min(item.m_stack, amount);
             item.m_stack -= num2;
             amount -= num2;

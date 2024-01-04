@@ -246,7 +246,7 @@ public class SmelterPatch
         if ((bool)__instance.m_fuelItem && num2 > 0)
         {
             var itemData = __instance.m_fuelItem.m_itemData;
-            var num3 = Helper.DeductItemFromAllNearbyContainers(__instance.gameObject, value, itemData, num2,
+            var num3 = Helper.DeductItemFromAllNearbyContainers(__instance.gameObject, value, itemData, 1,
                 !flag);
             for (var i = 0; i < num3; i++)
             {
@@ -271,7 +271,7 @@ public class SmelterPatch
                 }
 
                 var itemData2 = item2.m_from.m_itemData;
-                var num5 = Helper.DeductItemFromContainer(item, itemData2, num);
+                var num5 = Helper.DeductItemFromContainer(item, itemData2, 1);
                 if (num5 <= 0) continue;
                 var prefab = ObjectDB.instance.GetItemPrefab(item2.m_from.gameObject.name);
                 for (var j = 0; j < num5; j++)
